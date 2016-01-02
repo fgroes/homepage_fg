@@ -1,17 +1,21 @@
-<title>PyTasks</title>
-<form action="{{ url_for('add_task') }}" method=post>
-	<dl>
-		<dt>Title:
-		<dd><input type=text size=30 name=title>
-		<dt>Description:
-		<dd><textarea name=description rows=5 cols=40></textarea>
-		<dd><input type=submit value=Add>
-	</dl>
-</form>
-<ul>
-	{% for task in tasks %}
-		<li><h2>{{ task.title }}</h2>{{ task.description|safe }}
-	{% else %}
-		<li><em>No tasks found.</em>
-	{% endfor %}
-</ul>
+{% extends "pytasks.html" %}
+{% block body %}
+	{% if session.logged_in %}
+		<form action="{{ url_for('add_task') }}" method=post>
+			<dl>
+				<dt>Title:
+				<dd><input type=text size=30 name=title>
+				<dt>Description:
+				<dd><textarea name=description rows=5 cols=40></textarea>
+				<dd><input type=submit value=Add>
+			</dl>
+		</form>
+	{% endif %}
+	<ul>
+		{% for task in tasks %}
+			<li><h2>{{ task.title }}</h2>{{ task.description|safe }}
+		{% else %}
+			<li><em>No tasks found.</em>
+		{% endfor %}
+	</ul>
+{% endblock %}

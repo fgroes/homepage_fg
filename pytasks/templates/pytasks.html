@@ -1,0 +1,13 @@
+<!doctype html>
+<title>PyTasks</title>
+<h1>PyTasks</h1>
+{% if not session.logged_in %}
+	<a href="{{ url_for('login') }}">log in</a>
+{% else %}
+	<a href="{{ url_for('logout') }}">log out</a>
+{% endif %}
+{% for message in get_flashed_messages() %}
+	{{ message }}
+{% endfor %}
+{% block body %}
+{% endblock %}

@@ -47,12 +47,37 @@ def show_tasks():
 
 @app.route("/add", methods=["POST"])
 def add_task():
+	if not session.get("logged_in"):
+		abort(401)
 	title = request.form["title"]
 	description = request.form["description"]
 	dt = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S:%f")
 	g.db.execute("INSERT INTO tasks (title, description, date_of_creation) values (?, ?, ?)",
 		[title, description, dt])
 	g.db.commit()
+	flash("New task added")
+	return redirect(url_for("show_tasks"))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+	error = None
+	if request.method == "POST":
+		if request.form["username"] != app.config["USERNAME"]:
+			error = "Invalid username"
+		elif request.form["password"] != app.config["PASSWORD"]:
+			error = "Invalid password"
+		else:
+			session["logged_in"] = True
+			flash("Login successful")
+			return redirect(url_for("show_tasks"))
+	return render_template("login.html", error=error)
+
+
+@app.route("/logout")
+def logout():
+	session.pop("logged_in", None)
+	flash("Logout successful")
 	return redirect(url_for("show_tasks"))
 
 
