@@ -1,5 +1,6 @@
 import sqlite3 as sql
 from contextlib import closing
+import datetime
 
 
 from flask import Flask, request, session, g, redirect, url_for, \
@@ -38,10 +39,21 @@ def teardown_request(exception):
 
 
 @app.route("/")
-def show_entries():
-	cur = g.db.execute("SELECT title FROM tasks ORDER BY ID")
-	tasks = [dict(title=row[0]) for row in cur.fetchall()]
+def show_tasks():
+	cur = g.db.execute("SELECT title, description FROM tasks ORDER BY ID")
+	tasks = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
 	return render_template("show_tasks.html", tasks=tasks)
+
+
+@app.route("/add", methods=["POST"])
+def add_task():
+	title = request.form["title"]
+	description = request.form["description"]
+	dt = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S:%f")
+	g.db.execute("INSERT INTO tasks (title, description, date_of_creation) values (?, ?, ?)",
+		[title, description, dt])
+	g.db.commit()
+	return redirect(url_for("show_tasks"))
 
 
 if __name__ == "__main__":
