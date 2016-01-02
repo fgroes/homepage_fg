@@ -1,0 +1,9 @@
+<title>PyTasks</title>
+
+<ul>
+	{% for task in tasks %}
+		<li> {{ task.title }}
+	{% else %}
+		<li><em>No tasks found.</em>
+	{% endfor %}
+</ul>
