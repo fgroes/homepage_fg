@@ -1,0 +1,25 @@
+{% extends "pytasks.html" %}
+{% block app %}
+    <div class="container">
+		<div class="row row-offcanvas row-offcanvas-left">
+			<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+				<ul class="nav">
+					<!--<li class="active"><a href="#">Home</a></li>-->
+					<li><a href="{{ url_for('show_tasks') }}">Show</a></li>
+					<li><a href="{{ url_for('show_add_task') }}">Add</a></li>
+				</ul>
+			</div>
+		<div class="col-xs-12 col-sm-9">
+			<h1>PyTasks</h1>
+			{% block part %}
+			{% endblock %}
+		</div>
+	</div>
+	<script>
+		$(document).ready(function() {
+			$('[data-toggle=offcanvas]').click(function() {
+				$('.row-offcanvas').toggleClass('active');
+			});
+		});
+	</script>
+{% endblock %}

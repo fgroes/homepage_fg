@@ -39,13 +39,25 @@ def teardown_request(exception):
 
 
 @app.route("/")
+def index():
+	return render_template("pytasks.html")
+
+
+@app.route("/tasks")
 def show_tasks():
 	cur = g.db.execute("SELECT title, description FROM tasks ORDER BY ID")
 	tasks = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
 	return render_template("show_tasks.html", tasks=tasks)
 
 
-@app.route("/add", methods=["POST"])
+@app.route("/show_add_task")
+def show_add_task():
+	if not session.get("logged_in"):
+		abort(401)
+	return render_template("add_task.html")
+
+
+@app.route("/add_task", methods=["POST"])
 def add_task():
 	if not session.get("logged_in"):
 		abort(401)
